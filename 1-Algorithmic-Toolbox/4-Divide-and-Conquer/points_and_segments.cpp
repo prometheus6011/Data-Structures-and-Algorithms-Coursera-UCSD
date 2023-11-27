@@ -2,7 +2,10 @@
 #include <vector>
 #include <algorithm>
 #include <unordered_map>
+#include <cassert>
+#include <chrono>
 using namespace std ;
+using namespace std::chrono;
 
 void printVector( vector<pair<int, int>> vec ) {
     cout << "{" ;
@@ -25,6 +28,8 @@ vector<int> fast_count_segments( vector<int> starts, vector<int> ends, vector<in
 
     vector<pair<int, int>> vec ;
 
+    vec.reserve(starts.size() * 2 + points.size());
+
     for( int point: points ) {
         vec.push_back(make_pair(point, 1)) ;
     }
@@ -38,6 +43,7 @@ vector<int> fast_count_segments( vector<int> starts, vector<int> ends, vector<in
     sort(vec.begin(), vec.end(), sort_alg) ;
 
     unordered_map<int, int> map ;
+    map.reserve(points.size());
     int count = 0 ;
 
     for ( auto&& i: vec ) {
@@ -67,7 +73,34 @@ vector<int> naive_count_segments( vector<int> starts, vector<int> ends, vector<i
     return cnt ;
 }
 
+void test( ) {
+    while (true) {
+        int n = rand( ) % 10 ;
+        int m = rand( ) % 10 ;
+
+        vector<int> starts( n ), ends( n ) ;
+        for ( size_t i = 0; i < starts.size(); i++ ) {
+            int start = rand( ) % 1000 ;
+            int end = rand( ) % 1000 ;
+            if ( start > end ) {
+                i-- ;
+            } else {
+                starts[i] = start ;
+                ends[i] = end ;
+            }
+        }
+
+        vector<int> points( m ) ;
+        for ( size_t i = 0; i < points.size(); i++ ) {
+            points[i] = rand( ) % 1000 ;
+        }
+
+        assert( fast_count_segments( starts, ends, points ) == naive_count_segments( starts, ends, points ) ) ;
+    }
+}
+
 int main( ) {
+
     int n, m ;
     cin >> n >> m ;
     vector<int> starts( n ), ends( n ) ;
@@ -83,4 +116,7 @@ int main( ) {
     for ( size_t i = 0; i < cnt.size(); i++ ) {
         std::cout << cnt[i] << ' ' ;
     }
+
+
+//    test( ) ;
 }
