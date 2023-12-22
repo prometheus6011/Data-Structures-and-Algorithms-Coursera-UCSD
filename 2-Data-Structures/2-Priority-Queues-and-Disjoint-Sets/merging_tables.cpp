@@ -11,23 +11,23 @@
 using namespace std ;
 
 struct DisjointSetsElement {
-	int size, parent, rank;
+	int size, parent, rank ;
 	
-	DisjointSetsElement(int size = 0, int parent = -1, int rank = 0):
+	DisjointSetsElement( int size = 0, int parent = -1, int rank = 0 ):
 	    size(size), parent(parent), rank(rank) {}
 };
 
 struct DisjointSets {
-	int size;
-	int max_table_size;
-	vector <DisjointSetsElement> sets;
+	int size ;
+	int max_table_size ;
+	vector <DisjointSetsElement> sets ;
 
 	DisjointSets(int size): size(size), max_table_size(0), sets(size) {
-		for (int i = 0; i < size; i++)
-			sets[i].parent = i;
+		for ( int i = 0; i < size; i++ )
+			sets[i].parent = i ;
 	}
 
-	int getParent(int table) {
+	int getParent( int table ) {
 		
 		if ( table != sets[table].parent ) {
 			sets[table].parent = getParent( sets[table].parent ) ;
@@ -59,39 +59,35 @@ struct DisjointSets {
 		update_tables( real_destination, real_source ) ;
 	}
 
-	void merge(int destination, int source) {
-		int realDestination = getParent(destination);
-		int realSource = getParent(source);
-		if (realDestination != realSource) {
-			union_sets( destination, source ) ;
+	void merge( int destination, int source ) {
+		int realDestination = getParent( destination ) ;
+		int realSource = getParent( source ) ;
+		if ( realDestination != realSource ) {
+			union_sets( realDestination, realSource ) ;
 		}		
 	}
 };
 
-int main() {
-	int n, m;
-	cin >> n >> m;
+int main( ) {
+	int n, m ;
+	cin >> n >> m ;
 
 	DisjointSets tables(n);
-	for (auto &table : tables.sets) {
-		cin >> table.size;
-		tables.max_table_size = max(tables.max_table_size, table.size);
+	for ( auto &table : tables.sets ) {
+		cin >> table.size ;
+		tables.max_table_size = max( tables.max_table_size, table.size ) ;
 	}
 
 	vector<int> destination(m), sources(m) ;
 
 	for (int i = 0; i < m; i++) {
 		cin >> destination[i] >> sources[i] ;
-                --destination[i] ;
-                --sources[i] ;
+    --destination[i] ;
+    --sources[i] ;
 		
-		tables.merge(destination[i], sources[i]);
-	  cout << tables.max_table_size << endl;
+		tables.merge( destination[i], sources[i] ) ;
+	  cout << tables.max_table_size << endl ;
 	}
 
-	for (int i = 0; i < m; i++ ) {
-		cout << tables.max_table_size << endl ;
-	}
-
-	return 0;
+	return 0 ;
 }
